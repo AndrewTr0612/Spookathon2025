@@ -1,4 +1,8 @@
 from django.contrib import admin
+<<<<<<< HEAD
+
+# Register your models here.
+=======
 from .models import ChatMessage
 
 @admin.register(ChatMessage)
@@ -11,3 +15,4 @@ class ChatMessageAdmin(admin.ModelAdmin):
     def message_preview(self, obj):
         return obj.message[:50] + '...' if len(obj.message) > 50 else obj.message
     message_preview.short_description = 'Message'
+>>>>>>> upstream
