@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-import Task
+import Tasks
 
 # Each node in the BST 
 # represents a task and its position in the tree
@@ -40,8 +40,8 @@ class Schedule:
         ...
 
 # Example 
-task1 = BSTNode(Task.Task("Finish project report", datetime(2025,10,27,18,0), 180, "High", "School"))
-task2 = BSTNode(Task.Task("Study for exam", datetime(2025,10,26,21,0), 120, "High", "School"))
+task1 = BSTNode(Tasks.Task("Finish project report", datetime(2025,10,27,18,0), 180, "High", "School"))
+task2 = BSTNode(Tasks.Task("Study for exam", datetime(2025,10,26,21,0), 120, "High", "School"))
 
 schedule = Schedule()
 schedule.insert_task(task1.task)
