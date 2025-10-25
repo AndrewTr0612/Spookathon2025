@@ -66,3 +66,48 @@ def logout_view(request):
 @login_required
 def home_view(request):
     return render(request, 'accounts/home.html')
+
+
+@login_required
+def profile_view(request):
+    """View and edit user profile"""
+    return render(request, 'accounts/profile.html')
+
+
+@login_required
+def profile_edit(request):
+    """Edit user profile"""
+    if request.method == 'POST':
+        user = request.user
+        user.first_name = request.POST.get('name', '')
+        
+        # Handle age field
+        age_value = request.POST.get('age', '')
+        if age_value:
+            try:
+                user.age = int(age_value)
+            except ValueError:
+                messages.error(request, 'Please enter a valid age!')
+                return render(request, 'accounts/profile_edit.html')
+        else:
+            user.age = None
+            
+        user.email = request.POST.get('email', '')
+        
+        # Update password if provided
+        new_password = request.POST.get('new_password', '')
+        if new_password:
+            user.set_password(new_password)
+            messages.info(request, 'Password changed! Please login again.')
+            user.save()
+            logout(request)
+            return redirect('login')
+        
+        try:
+            user.save()
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('profile')
+        except Exception as e:
+            messages.error(request, f'Error updating profile: {str(e)}')
+    
+    return render(request, 'accounts/profile_edit.html')
