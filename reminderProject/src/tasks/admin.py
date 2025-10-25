@@ -1,8 +1,5 @@
 from django.contrib import admin
-
-# Register your models here.
-<<<<<<< HEAD
-=======
+from .models import Task
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
@@ -11,4 +8,3 @@ class TaskAdmin(admin.ModelAdmin):
     search_fields = ['name', 'user__username']
     date_hierarchy = 'deadline'
     ordering = ['-deadline']
->>>>>>> upstream

@@ -1,8 +1,4 @@
 from django.db import models
-<<<<<<< HEAD
-
-# Create your models here.
-=======
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -18,4 +14,3 @@ class ChatMessage(models.Model):
     
     def __str__(self):
         return f"{self.user.username}: {self.message[:50]}"
->>>>>>> upstream

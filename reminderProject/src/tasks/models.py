@@ -1,8 +1,5 @@
 from django.db import models
-
-# Create your models here.
-<<<<<<< HEAD
-=======
+from django.conf import settings
 
 class Task(models.Model):
     PRIORITY_CHOICES = [
@@ -44,4 +41,3 @@ class Task(models.Model):
     def estimated_minutes_remainder(self):
         """Return minutes remainder after hours"""
         return self.estimated_time_minutes % 60
->>>>>>> upstream
