@@ -14,6 +14,25 @@ class Task:
     def __repr__(self):
         return (f"{self.name} ({self.priority}) - {self.scheduled_start} "
                 f"to {self.scheduled_end}")
+    
+    # duration_extend(extra_minutes): Extend the task duration by extra_minutes
+    def duration_extend(self, extra_minutes):
+        self.duration += timedelta(minutes=extra_minutes)
+    
+    # set_schedule_start(start_time): Set the scheduled start time and calculate end time
+    def set_schedule_start(self, start_time):
+        self.scheduled_start = start_time
+        self.scheduled_end = start_time + self.duration
+    
+    # mark_complete(): Mark the task as completed
+    def mark_complete(self):
+        self.status = "Completed"
+    
+    # mark_cancelled(): Mark the task as cancelled
+    def mark_cancelled(self):
+        self.status = "Cancelled"
+    
+    
 
 # Helper to assign priority values for sorting
 priority_map = {"High": 1, "Medium": 2, "Low": 3}
@@ -65,6 +84,13 @@ tasks = [
 ]
 
 schedule = schedule_tasks(tasks)
-
 for t in schedule:
     print(t)
+
+print("\nAfter extending duration of first task:\n")
+# Extend duration example
+tasks[0].duration_extend(30)  # Extend first task by 30 minutes
+schedule = schedule_tasks(tasks)
+for t in schedule:
+    print(t)
+
