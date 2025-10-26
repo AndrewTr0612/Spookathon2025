@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Edit Profile - QuestsDaily</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #2d1b4e;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(120, 50, 150, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(180, 60, 200, 0.12) 0%, transparent 50%);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: transparent;
+            padding: 0 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .container { max-width: 480px; padding: 0; }
+        }
+        
+        .top-bar {
+            background: rgba(45, 27, 78, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(211, 47, 47, 0.2);
+            border-bottom: 2px solid rgba(211, 47, 47, 0.3);
+        }
+        
+        .back-btn {
+            font-size: 24px;
+            text-decoration: none;
+            color: #ff6b6b;
+            margin-right: 16px;
+        }
+        
+        .top-bar h1 { font-size: 20px; color: #ff6b6b; font-weight: 700; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); }
+        
+        .form-container {
+            background: rgba(45, 27, 78, 0.95);
+            margin: 20px;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.2);
+            border: 2px solid rgba(211, 47, 47, 0.3);
+        }
+        
+        @media (min-width: 769px) {
+            .form-container { margin: 24px auto; padding: 32px; max-width: 700px; }
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #e0e0e0;
+            margin-bottom: 8px;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #d32f2f;
+            background: white;
+            box-shadow: 0 0 15px rgba(211, 47, 47, 0.3);
+        }
+        
+        .save-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 8px;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+        }
+        
+        .save-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .messages {
+            margin: 20px;
+        }
+        
+        @media (min-width: 769px) {
+            .messages { margin: 20px auto; max-width: 700px; }
+        }
+        
+        .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            border: 1px solid;
+        }
+        
+        .message.error {
+            background-color: rgba(255, 50, 50, 0.2);
+            color: #ffcccc;
+            border-color: #ff5252;
+        }
+        
+        .message.success {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #b2fab4;
+            border-color: #4caf50;
+        }
+        
+        .message.info {
+            background-color: rgba(66, 165, 245, 0.2);
+            color: #90caf9;
+            border-color: #42a5f5;
+        }
+        
+        .help-text {
+            font-size: 13px;
+            color: #bbb;
+            margin-top: 4px;
+        }
+        
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 24px 0;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ff6b6b;
+            margin-bottom: 16px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(45, 27, 78, 0.98);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 20px 0;
+            box-shadow: 0 -2px 15px rgba(211, 47, 47, 0.3);
+            border-top: 2px solid rgba(211, 47, 47, 0.3);
+            z-index: 99;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #999;
+            font-size: 12px;
+            padding: 4px 0;
+            transition: color 0.2s, transform 0.1s;
+        }
+        
+        .nav-item:hover {
+            color: #ff6b6b;
+        }
+        
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+        
+        .nav-item.active { 
+            color: #d32f2f; 
+        }
+        
+        .nav-item span:first-child { 
+            font-size: 24px; 
+            margin-bottom: 4px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-bar">
+            <a href="{% url 'profile' %}" class="back-btn">←</a>
+            <h1>Edit Profile</h1>
+        </div>
+        
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="form-container">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="section-title">Personal Information</div>
+                
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" value="{{ user.first_name }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="date_of_birth">Date of Birth</label>
+                    <input type="date" id="date_of_birth" name="date_of_birth" value="{{ user.date_of_birth|date:'Y-m-d' }}">
+                    <div class="help-text">Your current age: {{ user.age|default:"Not set" }}</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}">
+                </div>
+                
+                <div class="divider"></div>
+                
+                <div class="section-title">Change Password (Optional)</div>
+                
+                <div class="form-group">
+                    <label for="new_password">New Password</label>
+                    <input type="password" id="new_password" name="new_password">
+                    <div class="help-text">Leave blank to keep current password</div>
+                </div>
+                
+                <button type="submit" class="save-btn">💾 Save Changes</button>
+            </form>
+        </div>
+        
+        <div class="bottom-nav">
+            <a href="{% url 'task_list' %}" class="nav-item">
+                <span>📋</span>
+                <span>Tasks</span>
+            </a>
+            <a href="{% url 'home' %}" class="nav-item">
+                <span>🏠</span>
+                <span>Home</span>
+            </a>
+            <a href="{% url 'tokens' %}" class="nav-item">
+                <span>🪙</span>
+                <span>Tokens</span>
+            </a>
+            <a href="{% url 'profile' %}" class="nav-item active">
+                <span>👤</span>
+                <span>Profile</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
