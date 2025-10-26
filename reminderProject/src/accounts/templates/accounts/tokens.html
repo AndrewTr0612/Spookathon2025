@@ -5,14 +5,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Tokens</title>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'accounts/css/tokens.css' %}">
 </head>
 <body>
+    <img src="{% static 'spiderWeb.jpg' %}" alt="Spider Web" class="spider-web">
     <div class="container">
         <div class="top-bar">
-            <a href="{% url 'home' %}" class="back-btn">←</a>
-            <h1>My Tokens</h1>
-            <div class="placeholder"></div>
+            <h1><img src="{% static 'ghost.png' %}" alt="Ghost" class="ghost-icon">SPOOKAMINDER</h1>
+            <div class="top-bar-right">
+                <a href="{% url 'tokens' %}" class="token-btn">
+                    <span class="token-icon">🪙</span>
+                    <span>{{ user.tokens|default:0 }}</span>
+                </a>
+                <div class="profile-dropdown">
+                    <button class="profile-btn" id="profileBtn">{{ user.first_name.0|default:user.username.0|upper }}</button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="{% url 'profile' %}">
+                            <span>👤</span>
+                            <span>My Account</span>
+                        </a>
+                        <a href="{% url 'logout' %}">
+                            <span>🚪</span>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="token-display">
@@ -55,9 +74,21 @@
                 <div class="info-icon">🎮</div>
                 <div class="info-content">
                     <div class="info-title">Use Tokens to Redeem items</div>
-                    <p class="info-desc">Use your earned tokens to play mini-games and unlock special features (coming soon).</p>
+                    <p class="info-desc">Use your earned tokens to play mini-games and unlock special features.</p>
                 </div>
             </div>
+        </div>
+        
+        <div class="game-section">
+            <a href="{% url 'game_home' %}" class="game-cta">
+                <div class="game-cta-icon">🌱</div>
+                <div class="game-cta-content">
+                    <h4>Plant Garden Mini-Game</h4>
+                    <p>Exchange tokens for water drops and grow your spooky plant!</p>
+                    <span class="cta-badge">5 tokens = 1 water drop 💧</span>
+                </div>
+                <div class="game-cta-arrow">→</div>
+            </a>
         </div>
         
         <div class="bottom-nav">
@@ -70,10 +101,25 @@
             <a href="{% url 'tokens' %}" class="nav-item active">
                 <span>🪙</span><span>Tokens</span>
             </a>
-            <a href="{% url 'profile' %}" class="nav-item">
-                <span>👤</span><span>Profile</span>
-            </a>
         </div>
     </div>
+    
+    <script>
+        // Dropdown menu functionality
+        const profileBtn = document.getElementById('profileBtn');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('show');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.profile-dropdown')) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+    </script>
 </body>
 </html>

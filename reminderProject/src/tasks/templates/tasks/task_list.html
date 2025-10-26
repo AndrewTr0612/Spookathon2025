@@ -5,12 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>My Tasks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'tasks/css/task_list.css' %}">
 </head>
 <body>
+    {% load static %}
+    <img src="{% static 'spiderWeb.jpg' %}" alt="Spider Web" class="spider-web">
     <div class="container">
         <div class="top-bar">
-            <h1>👻 My Quests</h1>
+            <h1><img src="{% static 'ghost.png' %}" alt="Ghost" class="ghost-icon">SPOOKAMINDER</h1>
             <div class="top-bar-right">
                 <a href="{% url 'tokens' %}" class="token-btn">
                     <span class="token-icon">🪙</span>
@@ -35,15 +38,15 @@
         <div class="stats-card">
             <div class="stats-grid">
                 <div class="stat-item">
-                    <h3>{{ tasks|length }}</h3>
+                    <h3>{{ total_tasks }}</h3>
                     <p>Total</p>
                 </div>
                 <div class="stat-item">
-                    <h3>{% widthratio pending_count 1 1 %}</h3>
+                    <h3>{{ pending_count }}</h3>
                     <p>Pending</p>
                 </div>
                 <div class="stat-item">
-                    <h3>{% widthratio completed_count 1 1 %}</h3>
+                    <h3>{{ completed_count }}</h3>
                     <p>Done</p>
                 </div>
             </div>
@@ -58,9 +61,10 @@
         {% endif %}
         
         <div class="tasks-section">
-            {% if tasks %}
+            {% if pending_tasks %}
+                <h2 class="section-heading">📋 Pending Tasks</h2>
                 <div class="tasks-grid">
-                {% for task in tasks %}
+                {% for task in pending_tasks %}
                 <div class="task-card priority-{{ task.priority|lower }}">
                     <div class="task-title">{{ task.name }}</div>
                     <div style="margin-bottom: 8px;">
@@ -72,16 +76,38 @@
                         {% if task.category %}<span>🏷️ {{ task.category }}</span>{% endif %}
                     </div>
                     <div class="task-actions">
-                        {% if task.status != 'Completed' %}
                         <a href="{% url 'task_complete' task.id %}" class="btn-action btn-complete">✓ Done</a>
-                        {% endif %}
                         <a href="{% url 'task_update' task.id %}" class="btn-action btn-edit">Edit</a>
                         <a href="{% url 'task_delete' task.id %}" class="btn-action btn-delete" onclick="return confirm('Delete this task?');">Delete</a>
                     </div>
                 </div>
                 {% endfor %}
                 </div>
-            {% else %}
+            {% endif %}
+            
+            {% if completed_tasks %}
+                <h2 class="section-heading" style="margin-top: 24px;">✅ Completed Tasks</h2>
+                <div class="tasks-grid">
+                {% for task in completed_tasks %}
+                <div class="task-card completed">
+                    <div class="task-title" style="text-decoration: line-through; opacity: 0.7;">{{ task.name }}</div>
+                    <div style="margin-bottom: 8px;">
+                        <span class="priority-badge priority-{{ task.priority|lower }}">{{ task.priority }}</span>
+                        <span class="status-badge status-completed">✓ Completed</span>
+                    </div>
+                    <div class="task-meta">
+                        <span>⏰ {{ task.deadline|date:"M d, h:i A" }}</span>
+                        {% if task.category %}<span>🏷️ {{ task.category }}</span>{% endif %}
+                    </div>
+                    <div class="task-actions">
+                        <a href="{% url 'task_delete' task.id %}" class="btn-action btn-delete" onclick="return confirm('Delete this task?');">Delete</a>
+                    </div>
+                </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+            
+            {% if not pending_tasks and not completed_tasks %}
                 <div class="empty-state">
                     <div class="empty-state-icon">📝</div>
                     <h3>No tasks yet!</h3>
@@ -104,10 +130,6 @@
             <a href="{% url 'tokens' %}" class="nav-item">
                 <span>🪙</span>
                 <span>Tokens</span>
-            </a>
-            <a href="{% url 'profile' %}" class="nav-item">
-                <span>👤</span>
-                <span>Profile</span>
             </a>
         </div>
     </div>

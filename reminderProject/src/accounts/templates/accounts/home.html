@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'accounts/css/home.css' %}">
 </head>
 <body>
+    <img src="{% static 'spiderWeb.jpg' %}" alt="Spider Web" class="spider-web">
     <div class="container">
         <div class="top-bar">
-            <h1>👻 QuestsDaily</h1>
+        <h1><img src="{% static 'ghost.png' %}" alt="Ghost" class="ghost-icon">SPOOKAMINDER</h1>
             <div class="top-bar-right">
                 <a href="{% url 'tokens' %}" class="token-btn">
                     <span class="token-icon">🪙</span>
@@ -77,6 +79,14 @@
                     </div>
                     <div class="action-arrow">›</div>
                 </a>
+                <a href="{% url 'game_home' %}" class="action-card">
+                    <div class="action-icon green">🌱</div>
+                    <div class="action-content">
+                        <div class="action-title">Plant Garden</div>
+                        <div class="action-desc">Water your plant and watch it grow</div>
+                    </div>
+                    <div class="action-arrow">›</div>
+                </a>
             </div>
         </div>
         <div class="bottom-nav">
@@ -88,9 +98,6 @@
             </a>
             <a href="{% url 'tokens' %}" class="nav-item">
                 <span>🪙</span><span>Tokens</span>
-            </a>
-            <a href="{% url 'profile' %}" class="nav-item">
-                <span>👤</span><span>Profile</span>
             </a>
         </div>
     </div>

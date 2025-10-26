@@ -13,6 +13,7 @@ def register_view(request):
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
         name = request.POST.get('name')
+        email = request.POST.get('email')
         date_of_birth = request.POST.get('date_of_birth')
         
         if password != password2:
@@ -23,11 +24,16 @@ def register_view(request):
             messages.error(request, 'Username already exists!')
             return render(request, 'accounts/register.html')
         
+        if email and User.objects.filter(email=email).exists():
+            messages.error(request, 'Email already registered!')
+            return render(request, 'accounts/register.html')
+        
         try:
             user = User.objects.create_user(
                 username=username,
                 password=password,
                 first_name=name,
+                email=email,
                 date_of_birth=datetime.strptime(date_of_birth, '%Y-%m-%d').date() if date_of_birth else None
             )
             login(request, user)

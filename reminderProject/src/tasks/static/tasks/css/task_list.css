@@ -2,9 +2,10 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: #2d1b4e;
+    background: #1a0928;
     min-height: 100vh;
     padding-bottom: 80px;
+    position: relative;
 }
 
 body::before {
@@ -14,9 +15,31 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('../../accounts/images/spooky-forest.jpg') center/cover no-repeat;
-    background-attachment: fixed;
+    background: linear-gradient(0deg, rgba(43, 18, 61, 0.7), rgba(26, 9, 40, 0.5));
     z-index: 0;
+    pointer-events: none;
+}
+
+/* spiderweb background */
+.spider-web {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0.35;
+    z-index: 0;
+    pointer-events: none;
+    mix-blend-mode: lighten;
+}
+
+@media (max-width: 768px) {
+    .spider-web {
+        opacity: 0.25;
+        object-fit: contain;
+    }
 }
 
 .container { 
@@ -47,12 +70,39 @@ body::before {
     align-items: center;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
     border-bottom: 2px solid rgba(255, 167, 38, 0.3);
+    border-radius: 0 0 16px 16px;
     position: sticky;
     top: 0;
     z-index: 100;
 }
 
-.top-bar h1 { font-size: 24px; color: #ffa726; font-weight: 700; text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 167, 38, 0.5); }
+.top-bar h1 { 
+    font-family: 'Creepster', cursive;
+    font-size: 24px; 
+    color: #ff6600; 
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-shadow: 0 0 6px #ff8800, 0 0 12px #ff4400;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ghost-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+    0%, 100% { 
+        transform: translateY(0); 
+    }
+    50% { 
+        transform: translateY(-5px); 
+    }
+}
 
 .top-bar-right {
     display: flex;
@@ -155,8 +205,8 @@ body::before {
 
 .stats-card {
     background: rgba(30, 20, 45, 0.95);
-    margin: 16px 20px;
-    padding: 20px;
+    margin: 20px;
+    padding: 24px;
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     border: 2px solid rgba(255, 167, 38, 0.3);
@@ -167,19 +217,114 @@ body::before {
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 20px;
     text-align: center;
+    justify-items: center;
+    align-items: center;
 }
 
-.stat-item h3 { font-size: 28px; color: #ffa726; margin-bottom: 4px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 167, 38, 0.4); }
-.stat-item p { font-size: 12px; color: #d0d0d0; text-transform: uppercase; letter-spacing: 0.5px; }
+@media (max-width: 768px) {
+    .stats-card {
+        margin: 16px 20px;
+        padding: 20px;
+    }
+    
+    .stats-grid {
+        gap: 16px;
+    }
+}
 
-.messages { margin: 16px 20px; position: relative; z-index: 2; }
-.message { padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; font-size: 14px; border: 1px solid; }
-.message.error { background-color: rgba(255, 50, 50, 0.2); color: #ffcccc; border-color: #ff5252; }
-.message.success { background-color: rgba(76, 175, 80, 0.2); color: #b2fab4; border-color: #4caf50; }
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+}
 
-.tasks-section { padding: 0 20px; position: relative; z-index: 2; }
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.stat-item h3 { 
+    font-size: 32px; 
+    color: #ffa726; 
+    margin-bottom: 6px; 
+    font-weight: 700;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 167, 38, 0.4); 
+}
+
+.stat-item p { 
+    font-size: 13px; 
+    color: #d0d0d0; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .stat-item h3 { font-size: 28px; }
+    .stat-item p { font-size: 12px; }
+}
+
+.messages { 
+    margin: 16px 20px; 
+    position: relative; 
+    z-index: 2; 
+}
+.message { 
+    padding: 12px 16px; 
+    border-radius: 12px; 
+    margin-bottom: 8px; 
+    font-size: 14px; 
+    border: 1px solid; 
+}
+
+.message.error { 
+    background-color: rgba(255, 50, 50, 0.2); 
+    color: #ffcccc; 
+    border-color: #ff5252; 
+}
+
+.message.success { 
+    background-color: rgba(76, 175, 80, 0.2); 
+    color: #b2fab4; 
+    border-color: #4caf50; 
+}
+
+.tasks-section { 
+    padding: 0 20px 20px; 
+    position: relative; 
+    z-index: 2; 
+    margin-top: 8px;
+}
+
+.section-heading {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffa726;
+    margin-bottom: 16px;
+    margin-top: 8px;
+    padding: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 167, 38, 0.4);
+}
+
+.tasks-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+@media (min-width: 769px) {
+    .tasks-grid { 
+        display: grid; 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 16px; 
+    }
+}
 
 .task-card {
     background: rgba(30, 20, 45, 0.95);
@@ -197,6 +342,7 @@ body::before {
 .task-card.priority-medium { border-left-color: #ffa726; }
 .task-card.priority-low { border-left-color: #66bb6a; }
 .task-card:active { transform: scale(0.98); }
+.task-card.completed { opacity: 0.7; background: rgba(20, 15, 30, 0.85); }
 
 .task-title { font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 8px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); }
 
@@ -267,12 +413,31 @@ body::before {
 
 .empty-state {
     text-align: center;
-    padding: 60px 20px;
+    padding: 80px 20px;
+    margin-top: 40px;
 }
 
-.empty-state-icon { font-size: 64px; margin-bottom: 16px; opacity: 0.4; }
-.empty-state h3 { font-size: 20px; color: #ffa726; margin-bottom: 8px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 167, 38, 0.3); }
-.empty-state p { color: #d0d0d0; margin-bottom: 24px; }
+.empty-state-icon { 
+    font-size: 80px; 
+    margin-bottom: 20px; 
+    opacity: 0.5;
+    filter: drop-shadow(0 4px 10px rgba(255, 167, 38, 0.3));
+}
+
+.empty-state h3 { 
+    font-size: 24px; 
+    color: #ffa726; 
+    margin-bottom: 12px; 
+    font-weight: 700;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 167, 38, 0.3); 
+}
+
+.empty-state p { 
+    color: #d0d0d0; 
+    margin-bottom: 24px;
+    font-size: 16px;
+    line-height: 1.5;
+}
 
 .fab {
     position: fixed;

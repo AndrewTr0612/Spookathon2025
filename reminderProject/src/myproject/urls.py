@@ -35,4 +35,7 @@ urlpatterns = [
     path('tasks/<int:task_id>/edit/', task_views.task_update, name='task_update'),
     path('tasks/<int:task_id>/delete/', task_views.task_delete, name='task_delete'),
     path('tasks/<int:task_id>/complete/', task_views.task_complete, name='task_complete'),
+    
+    # Mini Game URLs
+    path('game/', include('miniGame.urls')),
 ]

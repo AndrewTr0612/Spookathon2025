@@ -5,14 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{% if is_update %}Edit{% else %}New{% endif %} Task</title>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'tasks/css/task_form.css' %}">
 </head>
 <body>
+    {% load static %}
+    <img src="{% static 'spiderWeb.jpg' %}" alt="Spider Web" class="spider-web">
     <div class="container">
         <div class="top-bar">
             <a href="{% url 'task_list' %}" class="back-btn">✕</a>
-            <h1>{% if is_update %}Edit{% else %}New{% endif %} Task</h1>
+            <h1><img src="{% static 'ghost.png' %}" alt="Ghost" class="ghost-icon">SPOOKAMINDER</h1>
             <div class="top-bar-right">
+                {% if not is_update %}
+                <span class="daily-limit-badge">{{ remaining_tasks|default:5 }}/5 today</span>
+                {% endif %}
                 <a href="{% url 'tokens' %}" class="token-btn">
                     <span class="token-icon">🪙</span>
                     <span>{{ user.tokens|default:0 }}</span>
@@ -28,6 +34,16 @@
         </div>
         {% endif %}
         
+        {% if not is_update and remaining_tasks is not None %}
+        <div class="info-banner">
+            {% if remaining_tasks > 0 %}
+                <span>✨ You can create {{ remaining_tasks }} more task(s) today</span>
+            {% else %}
+                <span>⏰ Daily limit reached! Resets at midnight (00:00)</span>
+            {% endif %}
+        </div>
+        {% endif %}
+        
         <form method="POST">
             {% csrf_token %}
             
@@ -40,8 +56,10 @@
                 <div class="form-group">
                     <label for="deadline">Deadline</label>
                     <input type="datetime-local" id="deadline" name="deadline"
-                           value="{% if task %}{{ task.deadline|date:'Y-m-d\TH:i' }}{% endif %}" required>
-                    <div class="hint">When should this be completed?</div>
+                           value="{% if task %}{{ task.deadline|date:'Y-m-d\TH:i' }}{% endif %}" 
+                           {% if not is_update %}min="" max=""{% endif %}
+                           required>
+                    <div class="hint">{% if not is_update %}Must be today, from now until 11:59 PM{% else %}When should this be completed?{% endif %}</div>
                 </div>
                 
                 <div class="form-group">
@@ -98,10 +116,6 @@
             <span>🪙</span>
             <span>Tokens</span>
         </a>
-        <a href="{% url 'profile' %}" class="nav-item">
-            <span>👤</span>
-            <span>Profile</span>
-        </a>
     </div>
     
     <script>
@@ -112,6 +126,33 @@
                 this.classList.add('selected');
             });
         });
+        
+        // Set min and max datetime for deadline input (only for new tasks, not updates)
+        // {% if not is_update %}
+        const deadlineInput = document.getElementById('deadline');
+        if (deadlineInput) {
+            const now = new Date();
+            
+            // Format current time as YYYY-MM-DDTHH:MM
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+            
+            // Set max to end of today (23:59)
+            const maxDateTime = `${year}-${month}-${day}T23:59`;
+            
+            deadlineInput.setAttribute('min', minDateTime);
+            deadlineInput.setAttribute('max', maxDateTime);
+            
+            // Set default value to current time if empty
+            if (!deadlineInput.value) {
+                deadlineInput.value = minDateTime;
+            }
+        }
+        // {% endif %}
     </script>
 </body>
 </html>
