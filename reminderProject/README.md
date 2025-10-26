@@ -1,8 +1,28 @@
-# Reminder Project
+# 🎃 SPOOKAMINDER - Halloween Task Manager
 
-A mobile-first Django web application with user authentication and daily task tracking system.
+<div align="center">
+
+![Version](https://img.shields.io/badge/version-1.0.0-orange)
+![Django](https://img.shields.io/badge/Django-5.2.7-darkgreen)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-blue)
+![License](https://img.shields.io/badge/license-MIT-purple)
+
+A spooky-themed, mobile-first Django web application with gamification features, task tracking, and a delightful plant watering mini-game! 🌱👻
+
+[Features](#-features) • [Quick Start](#-quick-start) • [Game System](#-mini-game-system) • [Tech Stack](#-tech-stack)
+
+</div>
+
+---
 
 ## ✨ Features
+
+### 🎃 Halloween Theme
+- **Spooky Design**: Orange (#ff6600) and purple (#1a0928) color scheme
+- **Spider Web Background**: Atmospheric overlay with blend modes
+- **Creepster Font**: Halloween-themed typography
+- **Ghost Animations**: Floating ghost icons throughout
+- **Glowing Effects**: Text shadows and neon-style buttons
 
 ### 📱 Mobile-First Design
 - Modern iOS/Android-style interface
