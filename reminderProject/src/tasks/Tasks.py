@@ -20,10 +20,6 @@ class Task:
         priority_map = {"High": 1, "Medium": 2, "Low": 3}
         return priority_map.get(self.priority)
     
-    # get_latest_start(): Calculate latest start time to meet deadline
-    def get_latest_start(self):
-        return self.deadline - self.duration
-    
     # extend_duration(extra_minutes): 
     # Extend the task duration by extra_minutes
     # Update scheduled end time if already scheduled
@@ -31,13 +27,6 @@ class Task:
         self.duration += timedelta(minutes=extra_minutes)
         if self.scheduled_start:
             self.scheduled_end = self.scheduled_start + self.duration
-    
-    # set_schedule_start(start_time) 
-    # Set the scheduled start time and calculate end time
-    # For tasks that have been scheduled
-    def set_schedule_start(self, start_time):
-        self.scheduled_start = start_time
-        self.scheduled_end = start_time + self.duration
     
     # mark_complete(): Mark the task as completed
     def mark_complete(self):
