@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Task Schedule</h2>
+    
+    <!-- Schedule Generation Form -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Generate Schedule</h5>
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="start_date">Start Date/Time:</label>
+                            <input type="datetime-local" class="form-control" 
+                                   id="start_date" name="start_date"
+                                   min="{{ today }}" value="{{ today }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="end_date">End Date/Time:</label>
+                            <input type="datetime-local" class="form-control" 
+                                   id="end_date" name="end_date"
+                                   min="{{ today }}" max="{{ max_date }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary mt-4">
+                            Generate Schedule
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Schedule Display -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Current Schedule</h5>
+            {% if tasks %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Task</th>
+                                <th>Priority</th>
+                                <th>Deadline</th>
+                                <th>Scheduled Start</th>
+                                <th>Scheduled End</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                            <tr>
+                                <td>{{ task.name }}</td>
+                                <td>
+                                    <span class="badge {% if task.priority == 'High' %}bg-danger
+                                                      {% elif task.priority == 'Medium' %}bg-warning
+                                                      {% else %}bg-info{% endif %}">
+                                        {{ task.priority }}
+                                    </span>
+                                </td>
+                                <td>{{ task.deadline|date:"Y-m-d H:i" }}</td>
+                                <td>{{ task.scheduled_start|date:"Y-m-d H:i"|default:"-" }}</td>
+                                <td>{{ task.scheduled_end|date:"Y-m-d H:i"|default:"-" }}</td>
+                                <td>
+                                    <span class="badge {% if task.status == 'Completed' %}bg-success
+                                                      {% elif task.status == 'In Progress' %}bg-primary
+                                                      {% else %}bg-secondary{% endif %}">
+                                        {{ task.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">No tasks scheduled yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

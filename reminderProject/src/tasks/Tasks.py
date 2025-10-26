@@ -1,33 +1,21 @@
 from datetime import datetime, timedelta
 
 class Task:
-    def __init__(self, name, deadline, duration_minutes, priority, category):
+    def __init__(self, name, deadline, priority):
         self.name = name
         self.deadline = deadline  # datetime object
-        self.duration = timedelta(minutes=duration_minutes)
         self.priority = priority  # 'High', 'Medium', 'Low'
-        self.category = category
-        self.scheduled_start = None # datetime object
-        self.scheduled_end = None # datetime object
         self.status = "Pending"
 
     def __repr__(self):
-        return (f"{self.name} ({self.priority}) - {self.scheduled_start} "
-                f"to {self.scheduled_end}")
+        return (f"{self.name} Priority: {self.priority}"
+                f"Deadline: {self.deadline} Status: {self.status}")
     
     # priority_value(): Return numerical value for priority
     def priority_value(self):
         priority_map = {"High": 1, "Medium": 2, "Low": 3}
         return priority_map.get(self.priority)
-    
-    # extend_duration(extra_minutes): 
-    # Extend the task duration by extra_minutes
-    # Update scheduled end time if already scheduled
-    def extend_duration(self, extra_minutes):
-        self.duration += timedelta(minutes=extra_minutes)
-        if self.scheduled_start:
-            self.scheduled_end = self.scheduled_start + self.duration
-    
+     
     # mark_complete(): Mark the task as completed
     def mark_complete(self):
         self.status = "Completed"

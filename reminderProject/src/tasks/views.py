@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils import timezone
 from .models import Task
-from datetime import datetime
+from .scheduler import Scheduler
+from datetime import datetime, timedelta
 
 # Create your views here.
 
@@ -116,4 +118,55 @@ def task_complete(request, task_id):
     task.status = 'Completed'
     task.save()
     messages.success(request, f'Task "{task.name}" marked as completed!')
+    return redirect('task_list')
+
+
+@login_required
+def schedule_tasks(request):
+    """Generate a schedule for pending tasks"""
+    scheduler = Scheduler(request.user)
+    
+    if request.method == 'POST':
+        start_date_str = request.POST.get('start_date')
+        end_date_str = request.POST.get('end_date')
+        
+        try:
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M')
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%dT%H:%M')
+            
+            scheduled_tasks = scheduler.generate_schedule(start_date, end_date)
+            
+            if scheduled_tasks:
+                messages.success(request, f'Successfully scheduled {len(scheduled_tasks)} tasks!')
+            else:
+                messages.warning(request, 'No tasks were scheduled.')
+                
+        except ValueError as e:
+            messages.error(request, f'Invalid date format: {str(e)}')
+    
+    # Get all tasks with their schedule
+    tasks = Task.objects.filter(user=request.user).order_by('scheduled_start', 'deadline')
+    
+    context = {
+        'tasks': tasks,
+        'today': timezone.now().strftime('%Y-%m-%dT%H:%M'),
+        'max_date': (timezone.now() + timedelta(days=90)).strftime('%Y-%m-%dT%H:%M'),
+    }
+    
+    return render(request, 'tasks/schedule.html', context)
+
+
+@login_required
+def task_reschedule(request, task_id):
+    """Reschedule tasks after updating a specific task"""
+    task = get_object_or_404(Task, id=task_id, user=request.user)
+    scheduler = Scheduler(request.user)
+    
+    scheduled_tasks = scheduler.reschedule_after_update(task)
+    
+    if scheduled_tasks:
+        messages.success(request, 'Tasks rescheduled successfully!')
+    else:
+        messages.warning(request, 'No tasks could be scheduled.')
+    
     return redirect('task_list')
