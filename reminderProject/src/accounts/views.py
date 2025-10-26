@@ -3,6 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import User
+from datetime import datetime
 
 # Create your views here.
 
@@ -12,7 +13,7 @@ def register_view(request):
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
         name = request.POST.get('name')
-        age = request.POST.get('age')
+        date_of_birth = request.POST.get('date_of_birth')
         
         if password != password2:
             messages.error(request, 'Passwords do not match!')
@@ -27,7 +28,7 @@ def register_view(request):
                 username=username,
                 password=password,
                 first_name=name,
-                age=int(age) if age else None
+                date_of_birth=datetime.strptime(date_of_birth, '%Y-%m-%d').date() if date_of_birth else None
             )
             login(request, user)
             messages.success(request, 'Registration successful!')
@@ -81,16 +82,16 @@ def profile_edit(request):
         user = request.user
         user.first_name = request.POST.get('name', '')
         
-        # Handle age field
-        age_value = request.POST.get('age', '')
-        if age_value:
+        # Handle date of birth field
+        date_of_birth = request.POST.get('date_of_birth', '')
+        if date_of_birth:
             try:
-                user.age = int(age_value)
+                user.date_of_birth = datetime.strptime(date_of_birth, '%Y-%m-%d').date()
             except ValueError:
-                messages.error(request, 'Please enter a valid age!')
+                messages.error(request, 'Please enter a valid date!')
                 return render(request, 'accounts/profile_edit.html')
         else:
-            user.age = None
+            user.date_of_birth = None
             
         user.email = request.POST.get('email', '')
         

@@ -183,7 +183,11 @@
                     <span class="stat-value">{{ user.first_name|default:"Not set" }}</span>
                 </div>
                 <div class="stat-row">
-                    <span class="stat-label">🎂 Age</span>
+                    <span class="stat-label">🎂 Date of Birth</span>
+                    <span class="stat-value">{{ user.date_of_birth|date:"F d, Y"|default:"Not set" }}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">📅 Age</span>
                     <span class="stat-value">{{ user.age|default:"Not set" }}</span>
                 </div>
                 <div class="stat-row">
