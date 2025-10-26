@@ -27,6 +27,7 @@ urlpatterns = [
     path('logout/', account_views.logout_view, name='logout'),
     path('profile/', account_views.profile_view, name='profile'),
     path('profile/edit/', account_views.profile_edit, name='profile_edit'),
+    path('tokens/', account_views.tokens_view, name='tokens'),
     
     # Task URLs
     path('tasks/', task_views.task_list, name='task_list'),

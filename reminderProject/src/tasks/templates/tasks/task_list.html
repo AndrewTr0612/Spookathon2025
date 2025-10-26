@@ -1,240 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>My Tasks</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f7fa;
-            min-height: 100vh;
-            padding-bottom: 80px;
-        }
-        
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            background: #f5f7fa;
-            padding: 0 20px;
-        }
-        
-        @media (max-width: 768px) {
-            .container { max-width: 480px; padding: 0; }
-        }
-        
-        @media (min-width: 769px) {
-            .stats-card { margin: 24px 0; }
-            .tasks-section { padding: 0; }
-            .tasks-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-        }
-        
-        .top-bar {
-            background: white;
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .top-bar h1 { font-size: 24px; color: #1a1a1a; font-weight: 700; }
-        
-        .profile-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-        }
-        
-        .stats-card {
-            background: white;
-            margin: 16px 20px;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            text-align: center;
-        }
-        
-        .stat-item h3 { font-size: 28px; color: #667eea; margin-bottom: 4px; }
-        .stat-item p { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        .messages { margin: 16px 20px; }
-        .message { padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; font-size: 14px; }
-        .message.error { background-color: #fee; color: #c33; }
-        .message.success { background-color: #e8f5e9; color: #2e7d32; }
-        
-        .tasks-section { padding: 0 20px; }
-        
-        .task-card {
-            background: white;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            transition: transform 0.2s;
-            border-left: 4px solid #667eea;
-        }
-        
-        .task-card.priority-high { border-left-color: #f44336; }
-        .task-card.priority-medium { border-left-color: #ff9800; }
-        .task-card.priority-low { border-left-color: #4caf50; }
-        .task-card:active { transform: scale(0.98); }
-        
-        .task-title { font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; }
-        
-        .task-meta {
-            display: flex;
-            gap: 12px;
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
-        
-        .task-meta span { display: flex; align-items: center; gap: 4px; }
-        
-        .priority-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-right: 8px;
-        }
-        
-        .priority-high { background: #ffebee; color: #c62828; }
-        .priority-medium { background: #fff3e0; color: #e65100; }
-        .priority-low { background: #e8f5e9; color: #2e7d32; }
-        
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 500;
-        }
-        
-        .status-completed { background: #e8f5e9; color: #2e7d32; }
-        .status-pending { background: #f5f5f5; color: #666; }
-        .status-in-progress { background: #e3f2fd; color: #1565c0; }
-        
-        .task-actions { display: flex; gap: 8px; margin-top: 12px; }
-        
-        .btn-action {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-        }
-        
-        .btn-complete { background: #e8f5e9; color: #2e7d32; }
-        .btn-complete:active { background: #c8e6c9; }
-        .btn-edit { background: #e3f2fd; color: #1565c0; }
-        .btn-edit:active { background: #bbdefb; }
-        .btn-delete { background: #ffebee; color: #c62828; }
-        .btn-delete:active { background: #ffcdd2; }
-        
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-        }
-        
-        .empty-state-icon { font-size: 64px; margin-bottom: 16px; opacity: 0.3; }
-        .empty-state h3 { font-size: 20px; color: #1a1a1a; margin-bottom: 8px; }
-        .empty-state p { color: #666; margin-bottom: 24px; }
-        
-        .fab {
-            position: fixed;
-            bottom: 90px;
-            right: 24px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-size: 32px;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
-            transition: transform 0.2s;
-            z-index: 1000;
-        }
-        
-        .fab:active { transform: scale(0.9); }
-        
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0 20px 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
-            z-index: 99;
-        }
-        
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #999;
-            font-size: 12px;
-            padding: 4px 0;
-            transition: color 0.2s, transform 0.1s;
-        }
-        
-        .nav-item:hover {
-            color: #667eea;
-        }
-        
-        .nav-item:active {
-            transform: scale(0.95);
-        }
-        
-        .nav-item.active { color: #667eea; }
-        .nav-item span:first-child { font-size: 24px; margin-bottom: 4px; }
-    </style>
+    <link rel="stylesheet" href="{% static 'tasks/css/task_list.css' %}">
 </head>
 <body>
     <div class="container">
         <div class="top-bar">
             <h1>My Tasks</h1>
-            <a href="{% url 'profile' %}" class="profile-btn">
-                {{ user.first_name.0|default:user.username.0|upper }}
-            </a>
+            <div class="top-bar-right">
+                <a href="{% url 'tokens' %}" class="token-btn">
+                    <span class="token-icon">🪙</span>
+                    <span>{{ user.tokens|default:0 }}</span>
+                </a>
+                <a href="{% url 'profile' %}" class="profile-btn">
+                    {{ user.first_name.0|default:user.username.0|upper }}
+                </a>
+            </div>
         </div>
         
         <div class="stats-card">
@@ -274,7 +59,6 @@
                     </div>
                     <div class="task-meta">
                         <span>⏰ {{ task.deadline|date:"M d, h:i A" }}</span>
-                        <span>⏱️ {{ task.estimated_hours }}h {{ task.estimated_minutes_remainder }}m</span>
                         {% if task.category %}<span>🏷️ {{ task.category }}</span>{% endif %}
                     </div>
                     <div class="task-actions">
@@ -306,6 +90,10 @@
             <a href="{% url 'home' %}" class="nav-item">
                 <span>🏠</span>
                 <span>Home</span>
+            </a>
+            <a href="{% url 'tokens' %}" class="nav-item">
+                <span>🪙</span>
+                <span>Tokens</span>
             </a>
             <a href="{% url 'profile' %}" class="nav-item">
                 <span>👤</span>

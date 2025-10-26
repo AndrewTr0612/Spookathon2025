@@ -1,139 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f7fa;
-            min-height: 100vh;
-            padding-bottom: 80px;
-        }
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            background: #f5f7fa;
-            padding: 0 20px;
-        }
-        @media (max-width: 768px) {
-            .container { max-width: 480px; padding: 0; }
-        }
-        .top-bar {
-            background: white;
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .top-bar h1 { font-size: 24px; color: #1a1a1a; font-weight: 700; }
-        .profile-btn {
-            width: 40px; height: 40px; border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; display: flex; align-items: center; justify-content: center;
-            text-decoration: none; font-weight: bold; font-size: 16px;
-        }
-        .welcome-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 16px 20px; padding: 32px 24px; border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3); color: white;
-        }
-        @media (min-width: 769px) {
-            .welcome-card { margin: 24px 0; padding: 48px; }
-        }
-        .welcome-card h2 { font-size: 28px; margin-bottom: 8px; }
-        .welcome-card p { font-size: 16px; opacity: 0.9; }
-        .quick-actions { padding: 0 20px; margin-top: 24px; }
-        @media (min-width: 769px) {
-            .quick-actions { padding: 0; }
-            .action-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        }
-        .section-title { font-size: 18px; font-weight: 600; color: #1a1a1a; margin-bottom: 16px; }
-        .action-card {
-            background: white; border-radius: 16px; padding: 20px; margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-decoration: none; display: flex;
-            align-items: center; gap: 16px; transition: transform 0.2s;
-        }
-        .action-card:active { transform: scale(0.98); }
-        .action-icon {
-            width: 56px; height: 56px; border-radius: 14px; display: flex;
-            align-items: center; justify-content: center; font-size: 28px;
-        }
-        .action-icon.purple { background: #f3f0ff; }
-        .action-icon.blue { background: #e3f2fd; }
-        .action-icon.green { background: #e8f5e9; }
-        .action-content { flex: 1; }
-        .action-title { font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
-        .action-desc { font-size: 14px; color: #666; }
-        .action-arrow { font-size: 20px; color: #ccc; }
-        .user-stats {
-            background: white; margin: 16px 20px; padding: 20px;
-            border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-        @media (min-width: 769px) {
-            .user-stats { margin: 16px 0; }
-        }
-        .stat-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 0; border-bottom: 1px solid #f0f0f0;
-        }
-        .stat-row:last-child { border-bottom: none; }
-        .stat-label { font-size: 14px; color: #666; }
-        .stat-value { font-size: 16px; font-weight: 600; color: #1a1a1a; }
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0 20px 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
-            z-index: 99;
-        }
-        
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #999;
-            font-size: 12px;
-            padding: 4px 0;
-            transition: color 0.2s, transform 0.1s;
-        }
-        
-        .nav-item:hover {
-            color: #667eea;
-        }
-        
-        .nav-item:active {
-            transform: scale(0.95);
-        }
-        
-        .nav-item.active { 
-            color: #667eea; 
-        }
-        
-        .nav-item span:first-child { 
-            font-size: 24px; 
-            margin-bottom: 4px; 
-        }
-        .messages { margin: 16px 20px; }
-        .message { padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; font-size: 14px; }
-        .message.error { background-color: #fee; color: #c33; }
-        .message.success { background-color: #e8f5e9; color: #2e7d32; }
-    </style>
+    <link rel="stylesheet" href="{% static 'accounts/css/home.css' %}">
 </head>
 <body>
     <div class="container">
         <div class="top-bar">
             <h1>Dashboard</h1>
-            <a href="{% url 'profile' %}" class="profile-btn">{{ user.first_name.0|default:user.username.0|upper }}</a>
+            <div class="top-bar-right">
+                <a href="{% url 'tokens' %}" class="token-btn">
+                    <span class="token-icon">🪙</span>
+                    <span>{{ user.tokens|default:0 }}</span>
+                </a>
+                <a href="{% url 'profile' %}" class="profile-btn">{{ user.first_name.0|default:user.username.0|upper }}</a>
+            </div>
         </div>
         {% if messages %}
         <div class="messages">
@@ -165,8 +49,16 @@
                     </div>
                     <div class="action-arrow">›</div>
                 </a>
+                <a href="{% url 'tokens' %}" class="action-card">
+                    <div class="action-icon green">🪙</div>
+                    <div class="action-content">
+                        <div class="action-title">My Tokens</div>
+                        <div class="action-desc">View your rewards and achievements</div>
+                    </div>
+                    <div class="action-arrow">›</div>
+                </a>
                 <a href="{% url 'profile' %}" class="action-card">
-                    <div class="action-icon green">👤</div>
+                    <div class="action-icon purple">👤</div>
                     <div class="action-content">
                         <div class="action-title">Profile</div>
                         <div class="action-desc">View and edit your profile</div>
@@ -175,33 +67,15 @@
                 </a>
             </div>
         </div>
-        <div class="quick-actions">
-            <h3 class="section-title">Account Info</h3>
-            <div class="user-stats">
-                <div class="stat-row">
-                    <span class="stat-label">👤 Name</span>
-                    <span class="stat-value">{{ user.first_name|default:"Not set" }}</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">🎂 Date of Birth</span>
-                    <span class="stat-value">{{ user.date_of_birth|date:"F d, Y"|default:"Not set" }}</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">📅 Age</span>
-                    <span class="stat-value">{{ user.age|default:"Not set" }}</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">📧 Email</span>
-                    <span class="stat-value">{{ user.email|default:"Not set" }}</span>
-                </div>
-            </div>
-        </div>
         <div class="bottom-nav">
             <a href="{% url 'task_list' %}" class="nav-item">
                 <span>📋</span><span>Tasks</span>
             </a>
             <a href="{% url 'home' %}" class="nav-item active">
                 <span>🏠</span><span>Home</span>
+            </a>
+            <a href="{% url 'tokens' %}" class="nav-item">
+                <span>🪙</span><span>Tokens</span>
             </a>
             <a href="{% url 'profile' %}" class="nav-item">
                 <span>👤</span><span>Profile</span>

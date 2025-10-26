@@ -345,6 +345,15 @@
                 {% csrf_token %}
                 <button type="submit" class="clear-btn" onclick="return confirm('Clear all chat history?');">Clear</button>
             </form>
+            <div class="top-bar-right">
+                {% if user.is_authenticated %}
+                <a href="{% url 'tokens' %}" class="token-btn">
+                    <span class="token-icon">🪙</span>
+                    <span>{{ user.tokens|default:0 }}</span>
+                </a>
+                <a href="{% url 'profile' %}" class="profile-btn">{{ user.first_name.0|default:user.username.0|upper }}</a>
+                {% endif %}
+            </div>
         </div>
         
         <div class="chat-container">

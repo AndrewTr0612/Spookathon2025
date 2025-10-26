@@ -6,6 +6,8 @@ from datetime import date
 
 class User(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
+    # Tokens used for small game/quest system. Earned when completing tasks.
+    tokens = models.IntegerField(default=0)
     
     @property
     def age(self):

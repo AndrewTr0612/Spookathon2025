@@ -112,3 +112,20 @@ def profile_edit(request):
             messages.error(request, f'Error updating profile: {str(e)}')
     
     return render(request, 'accounts/profile_edit.html')
+
+
+@login_required
+def tokens_view(request):
+    """View tokens and stats"""
+    from tasks.models import Task
+    
+    total_tasks = Task.objects.filter(user=request.user).count()
+    completed_tasks = Task.objects.filter(user=request.user, status='Completed').count()
+    pending_tasks = Task.objects.filter(user=request.user).exclude(status='Completed').count()
+    
+    context = {
+        'total_tasks': total_tasks,
+        'completed_tasks': completed_tasks,
+        'pending_tasks': pending_tasks,
+    }
+    return render(request, 'accounts/tokens.html', context)

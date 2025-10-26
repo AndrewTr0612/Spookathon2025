@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Tokens</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/tokens.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="top-bar">
+            <a href="{% url 'home' %}" class="back-btn">←</a>
+            <h1>My Tokens</h1>
+            <div class="placeholder"></div>
+        </div>
+        
+        <div class="token-display">
+            <div class="token-icon-large">🪙</div>
+            <div class="token-count">{{ user.tokens|default:0 }}</div>
+            <p class="token-label">Total Tokens Earned</p>
+        </div>
+        
+        <div class="stats-section">
+            <h3 class="section-title">Your Stats</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-number">{{ completed_tasks }}</div>
+                    <div class="stat-label">Tasks Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-number">{{ total_tasks }}</div>
+                    <div class="stat-label">Total Tasks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-number">{{ pending_tasks }}</div>
+                    <div class="stat-label">Pending Tasks</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h3 class="section-title">How to Earn Tokens</h3>
+            <div class="info-card">
+                <div class="info-icon">🎯</div>
+                <div class="info-content">
+                    <div class="info-title">Complete Tasks</div>
+                    <p class="info-desc">Earn 1 token for every task you complete. The more you accomplish, the more you earn!</p>
+                </div>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">🎮</div>
+                <div class="info-content">
+                    <div class="info-title">Use Tokens to Redeem items</div>
+                    <p class="info-desc">Use your earned tokens to play mini-games and unlock special features (coming soon).</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-nav">
+            <a href="{% url 'task_list' %}" class="nav-item">
+                <span>📋</span><span>Tasks</span>
+            </a>
+            <a href="{% url 'home' %}" class="nav-item">
+                <span>🏠</span><span>Home</span>
+            </a>
+            <a href="{% url 'tokens' %}" class="nav-item active">
+                <span>🪙</span><span>Tokens</span>
+            </a>
+            <a href="{% url 'profile' %}" class="nav-item">
+                <span>👤</span><span>Profile</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Include Chat Widget -->
+    {% include 'chatbox/chat_widget.html' %}
+</body>
+</html>
