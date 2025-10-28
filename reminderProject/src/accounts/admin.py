@@ -7,14 +7,14 @@ from .models import User
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
-    list_display = ['username', 'email', 'first_name', 'last_name', 'age', 'tokens', 'is_staff', 'is_active']
+    list_display = ['username', 'email', 'first_name', 'last_name', 'get_age', 'tokens', 'is_staff', 'is_active']
     list_filter = ['is_staff', 'is_superuser', 'is_active', 'groups']
     search_fields = ['username', 'first_name', 'last_name', 'email']
     ordering = ['username']
     
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'email', 'age')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'email', 'date_of_birth')}),
         ('Game Info', {'fields': ('tokens',)}),
         ('Permissions', {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
@@ -25,11 +25,16 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2', 'email', 'first_name', 'last_name', 'age', 'tokens'),
+            'fields': ('username', 'password1', 'password2', 'email', 'first_name', 'last_name', 'date_of_birth', 'tokens'),
         }),
     )
     
     readonly_fields = ['last_login', 'date_joined']
+    
+    def get_age(self, obj):
+        """Display calculated age in admin list"""
+        return obj.age if obj.age else '-'
+    get_age.short_description = 'Age'
     filter_horizontal = ['groups', 'user_permissions']
     actions = ['add_100_tokens', 'add_500_tokens', 'add_1000_tokens', 'reset_tokens']
     
