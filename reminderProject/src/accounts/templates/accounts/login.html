@@ -7,8 +7,14 @@
     <title>Login - Spookaminder</title>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/background-music.css' %}">
 </head>
 <body>
+    <!-- Background Music - Hidden Audio Element -->
+    <audio id="bgMusic" loop autoplay>
+        <source src="{% static 'sounds/scary-music-box-165983.mp3' %}" type="audio/mpeg">
+    </audio>
+    
     <img src="{% static 'spiderWeb.jpg' %}" alt="Spider Web" class="spider-web">
     <img src="{% static 'ghost.png' %}" alt="Ghost" class="ghost">
     
@@ -32,5 +38,8 @@
     <div class="auth-link">
         Don't have an account? <a href="{% url 'register' %}">Register here</a>
     </div>
+    
+    <!-- Load Background Music -->
+    <script src="{% static 'js/background-music.js' %}"></script>
 </body>
 </html>

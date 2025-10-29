@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib import messages
+from django.utils import timezone
 from .models import User
 
 # Register your models here.
@@ -36,7 +37,7 @@ class CustomUserAdmin(UserAdmin):
         return obj.age if obj.age else '-'
     get_age.short_description = 'Age'
     filter_horizontal = ['groups', 'user_permissions']
-    actions = ['add_100_tokens', 'add_500_tokens', 'add_1000_tokens', 'reset_tokens']
+    actions = ['add_100_tokens', 'add_500_tokens', 'add_1000_tokens', 'reset_tokens', 'reset_daily_task_limit']
     
     def add_100_tokens(self, request, queryset):
         """Add 100 tokens to selected users"""
@@ -77,3 +78,28 @@ class CustomUserAdmin(UserAdmin):
             count += 1
         self.message_user(request, f'Reset tokens for {count} user(s).', messages.WARNING)
     reset_tokens.short_description = '🔄 Reset tokens to 0 for selected users'
+    
+    def reset_daily_task_limit(self, request, queryset):
+        """Delete all tasks created today for selected users to reset their daily task limit"""
+        from tasks.models import Task
+        
+        # Get today's date range
+        today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today_end = timezone.now().replace(hour=23, minute=59, second=59, microsecond=999999)
+        
+        total_deleted = 0
+        for user in queryset:
+            # Delete all tasks created today for this user
+            deleted = Task.objects.filter(
+                user=user,
+                created_at__gte=today_start,
+                created_at__lte=today_end
+            ).delete()
+            total_deleted += deleted[0]  # deleted[0] contains the count
+        
+        self.message_user(
+            request,
+            f'Reset daily task limit for {queryset.count()} user(s). Deleted {total_deleted} task(s) created today. Users can now create 5 new tasks today.',
+            messages.SUCCESS
+        )
+    reset_daily_task_limit.short_description = '📋 Reset daily task limit (delete today\'s tasks)'

@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import JsonResponse
 from .models import Task
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils import timezone
 
 # Create your views here.
@@ -168,3 +169,46 @@ def task_complete(request, task_id):
     else:
         messages.info(request, f'Task "{task.name}" is already completed.')
     return redirect('task_list')
+
+
+@login_required
+def upcoming_tasks_api(request):
+    """API endpoint for upcoming tasks - used by reminder system"""
+    if not request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'error': 'Invalid request'}, status=400)
+    
+    now = timezone.now()
+    
+    # Get all pending tasks due within the next hour
+    upcoming_tasks = Task.objects.filter(
+        user=request.user,
+        status__in=['Pending', 'In Progress'],
+        deadline__gte=now,
+        deadline__lte=now + timedelta(hours=1)
+    ).order_by('deadline')
+    
+    # Also get overdue tasks
+    overdue_tasks = Task.objects.filter(
+        user=request.user,
+        status__in=['Pending', 'In Progress'],
+        deadline__lt=now
+    ).order_by('deadline')
+    
+    # Combine and format tasks
+    all_tasks = list(upcoming_tasks) + list(overdue_tasks)
+    
+    tasks_data = []
+    for task in all_tasks:
+        time_diff = task.deadline - now
+        minutes_until = int(time_diff.total_seconds() / 60)
+        
+        tasks_data.append({
+            'id': task.id,
+            'name': task.name,
+            'deadline': task.deadline.isoformat(),
+            'priority': task.priority,
+            'minutes_until': minutes_until,
+            'is_overdue': minutes_until < 0
+        })
+    
+    return JsonResponse({'tasks': tasks_data})

@@ -7,9 +7,16 @@
     <title>My Tasks</title>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'tasks/css/task_list.css' %}">
+    <link rel="stylesheet" href="{% static 'tasks/css/reminders.css' %}">
+    <link rel="stylesheet" href="{% static 'css/background-music.css' %}">
 </head>
 <body>
     {% load static %}
+    <!-- Background Music - Hidden Audio Element -->
+    <audio id="bgMusic" loop autoplay>
+        <source src="{% static 'sounds/scary-music-box-165983.mp3' %}" type="audio/mpeg">
+    </audio>
+    
     <img src="{% static 'spiderWeb.jpg' %}" alt="Spider Web" class="spider-web">
     <div class="container">
         <div class="top-bar">
@@ -134,6 +141,11 @@
         </div>
     </div>
     
+    <!-- Reminder Toggle Button -->
+    <button class="reminder-toggle" id="reminderToggle" title="Toggle Reminders">
+        🔔
+    </button>
+    
     <script>
         // Dropdown menu functionality
         const profileBtn = document.getElementById('profileBtn');
@@ -150,6 +162,42 @@
                 dropdownMenu.classList.remove('show');
             }
         });
+        
+        // Reminder toggle functionality
+        const reminderToggle = document.getElementById('reminderToggle');
+        reminderToggle.addEventListener('click', () => {
+            if (window.spookyReminder) {
+                const newState = !window.spookyReminder.isEnabled;
+                window.spookyReminder.setPreference(newState);
+                
+                if (newState) {
+                    reminderToggle.classList.remove('disabled');
+                    reminderToggle.textContent = '🔔';
+                    reminderToggle.title = 'Reminders Enabled (Click to Disable)';
+                } else {
+                    reminderToggle.classList.add('disabled');
+                    reminderToggle.textContent = '🔕';
+                    reminderToggle.title = 'Reminders Disabled (Click to Enable)';
+                }
+            }
+        });
+        
+        // Set initial state when reminder system loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (window.spookyReminder && !window.spookyReminder.isEnabled) {
+                    reminderToggle.classList.add('disabled');
+                    reminderToggle.textContent = '🔕';
+                    reminderToggle.title = 'Reminders Disabled (Click to Enable)';
+                }
+            }, 100);
+        });
     </script>
+    
+    <!-- Load Reminder System -->
+    <script src="{% static 'tasks/js/reminders.js' %}"></script>
+    
+    <!-- Load Background Music -->
+    <script src="{% static 'js/background-music.js' %}"></script>
 </body>
 </html>
